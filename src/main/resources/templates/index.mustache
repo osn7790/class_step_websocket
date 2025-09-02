@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>채팅</title>
+    <style>
+        body { margin: 20px; font-family: Arial, sans-serif; }
+        nav ul { list-style: none; padding: 0; display: flex; gap: 10px; }
+        nav a { padding: 8px 15px; background: #666; color: white; text-decoration: none; }
+
+        /* 채팅창 */
+        .chat-area {
+            border: 1px solid #ccc;
+            height: 300px;
+            padding: 10px;
+            overflow-y: scroll;
+            background: #f9f9f9;
+        }
+
+        /* 메시지 */
+        .message {
+            padding: 5px 10px;
+            margin: 3px 0;
+            background: white;
+            border-radius: 8px;
+            max-width: 80%;
+        }
+
+        .message:nth-child(odd) {
+            background: #e1f5fe;
+            margin-left: 20%;
+        }
+    </style>
+</head>
+<body>
+<nav>
+    <ul>
+        <li><a href="/">목록</a></li>
+        <li><a href="/save-form">작성</a></li>
+    </ul>
+</nav>
+
+<h3>채팅</h3>
+<p style="color: #666; font-size: 13px;">2초마다 업데이트</p>
+
+<div class="chat-area">
+    {{#models}}
+        <div class="message">{{msg}}</div>
+    {{/models}}
+</div>
+
+<script>
+    <!--    2초 후 새로고침-->
+    setTimeout(() => location.reload(), 2000);
+
+
+    <!--   크롤 아래로 - 클래스이름, ID 등으로 접근-->
+    document.querySelector(".chat-area").scrollTop = 999;
+
+</script>
+
+</body>
+</html>
