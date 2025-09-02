@@ -13,20 +13,27 @@ import java.util.List;
 public class ChatService {
 
     private final ChatRepository chatRepository;
+    private final SseService sseService;
 
+    // TODO 수정
     // 채팅 메세지 저장
 
     @Transactional // 쓰기 작업이므로 읽기 전용 해제 처리
     public Chat save(String msg) {
         Chat chat = Chat.builder().msg(msg).build();
-        return chatRepository.save(chat);
+        Chat savedChat = chatRepository.save(chat);
+
+        // 핵심 : 새 메세지를 연결된 클라이언트에게 즉시 전송 처리
+        sseService.broadcastMessage(savedChat.getMsg());
+
+        return savedChat;
     }
 
     // 채팅 메세지 리스트
     public List<Chat> findAll() {
         // 내림 차순으로 정렬하고 싶다면
-        Sort desc = Sort.by(Sort.Direction.DESC, "id");
-        return chatRepository.findAll();
+        Sort sort = Sort.by(Sort.Direction.ASC, "id");
+        return chatRepository.findAll(sort);
     }
 
 

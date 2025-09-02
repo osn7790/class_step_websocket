@@ -43,18 +43,42 @@
 <h3>채팅</h3>
 <p style="color: #666; font-size: 13px;">2초마다 업데이트</p>
 
-<div class="chat-area">
+<div class="chat-area" id="chatArea">
     {{#models}}
         <div class="message">{{msg}}</div>
     {{/models}}
 </div>
 
 <script>
-    <!--    2초 후 새로고침-->
-    setTimeout(() => location.reload(), 2000);
 
+    const chatArea = document.getElementById('chatArea');
 
-    <!--   크롤 아래로 - 클래스이름, ID 등으로 접근-->
+    <!--    JS에서 EventSource 객체를 생성하여 SSE 연결 함-->
+    const eventSource = new EventSource('/sse/connect');
+
+    <!-- 페이지 로드시 스크롤 맨 아래로 이동   -->
+    window.addEventListener('load', () => {
+        chatArea.scrollTop = chatArea.scrollHeight;
+    });
+
+    // 실제 메세지 처리
+    eventSource.addEventListener('newMessage', (event) => {
+        const newMessage = event.data;
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'message';
+        messageDiv.textContent = newMessage;
+        chatArea.appdendChild(messageDiv);
+
+        <!-- 새 메세지가 있는 새 DIV 생성해서 스크롤을 맨 아래로 이동 처리  -->
+        chatArea.scrollTop = chatArea.scrollHeight;
+    });
+
+    // 페이지 종료 시 연결 정리
+    window.addEventListener('beforeunload', () => {
+        eventSource.close();
+    });
+
+    <!--   스크롤 아래로 - 클래스이름, ID 등으로 접근-->
     document.querySelector(".chat-area").scrollTop = 999;
 
 </script>
