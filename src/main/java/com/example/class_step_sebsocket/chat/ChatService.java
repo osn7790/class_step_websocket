@@ -13,7 +13,6 @@ import java.util.List;
 public class ChatService {
 
     private final ChatRepository chatRepository;
-    private final SseService sseService;
 
     // TODO 수정
     // 채팅 메세지 저장
@@ -24,7 +23,7 @@ public class ChatService {
         Chat savedChat = chatRepository.save(chat);
 
         // 핵심 : 새 메세지를 연결된 클라이언트에게 즉시 전송 처리
-        sseService.broadcastMessage(savedChat.getMsg());
+        // 핸들러 만들어 두었음 - ChatWebsocketHandler
 
         return savedChat;
     }
