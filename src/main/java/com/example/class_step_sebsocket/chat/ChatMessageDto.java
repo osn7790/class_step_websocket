@@ -9,5 +9,4 @@ public class ChatMessageDto {
     private Integer id;
     private String content;
     private String sender;
-    private
 }
